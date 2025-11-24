@@ -23,10 +23,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -40,39 +37,51 @@ class DefaultFirebaseOptions {
   }
 
   // TODO: Replace with your actual Firebase configuration
-  // Run: flutterfire configure
+
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'YOUR_WEB_API_KEY',
-    appId: 'YOUR_WEB_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    authDomain: 'YOUR_AUTH_DOMAIN',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
+    apiKey: 'AIzaSyBjuwXg9imkt7rhJiKnw7a_9NDIgN6vTz0',
+    appId: '1:874006130232:web:dfcdc244fd9cb780afc0cd',
+    messagingSenderId: '874006130232',
+    projectId: 'currensee-ad1f4',
+    authDomain: 'currensee-ad1f4.firebaseapp.com',
+    storageBucket: 'currensee-ad1f4.firebasestorage.app',
   );
 
+  // Run: flutterfire configure
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'YOUR_ANDROID_API_KEY',
-    appId: 'YOUR_ANDROID_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
+    apiKey: 'AIzaSyCePkigXKKF1YkAh_Cl7TeisS9kN2li8N4',
+    appId: '1:874006130232:android:0dc08cbd4f92ad0dafc0cd',
+    messagingSenderId: '874006130232',
+    projectId: 'currensee-ad1f4',
+    storageBucket: 'currensee-ad1f4.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'YOUR_IOS_API_KEY',
-    appId: 'YOUR_IOS_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
+    apiKey: 'AIzaSyD0zKbgxy1AbbXFlnaB9_Cdx_xvO0NhPGY',
+    appId: '1:874006130232:ios:0b3be56ece4f7f20afc0cd',
+    messagingSenderId: '874006130232',
+    projectId: 'currensee-ad1f4',
+    storageBucket: 'currensee-ad1f4.firebasestorage.app',
     iosBundleId: 'com.currensee.currensee',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'YOUR_MACOS_API_KEY',
-    appId: 'YOUR_MACOS_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
+    apiKey: 'AIzaSyD0zKbgxy1AbbXFlnaB9_Cdx_xvO0NhPGY',
+    appId: '1:874006130232:ios:0b3be56ece4f7f20afc0cd',
+    messagingSenderId: '874006130232',
+    projectId: 'currensee-ad1f4',
+    storageBucket: 'currensee-ad1f4.firebasestorage.app',
     iosBundleId: 'com.currensee.currensee',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBjuwXg9imkt7rhJiKnw7a_9NDIgN6vTz0',
+    appId: '1:874006130232:web:dca8337c75793d91afc0cd',
+    messagingSenderId: '874006130232',
+    projectId: 'currensee-ad1f4',
+    authDomain: 'currensee-ad1f4.firebaseapp.com',
+    storageBucket: 'currensee-ad1f4.firebasestorage.app',
+  );
+
 }
