@@ -2,12 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CurrencyApiService {
-  // Using exchangerate.host - free API, no key required
-  static const String _baseUrl = 'https://api.exchangerate.host';
-
-  // Alternative: OpenExchangeRates (requires API key)
-  // static const String _baseUrl = 'https://openexchangerates.org/api';
-  // static const String _apiKey = 'YOUR_API_KEY_HERE';
+  // Using frankfurter.app - free API, no key required
+  static const String _baseUrl = 'https://api.frankfurter.app';
 
   // Get latest exchange rates
   Future<Map<String, double>> getExchangeRates({
@@ -15,7 +11,7 @@ class CurrencyApiService {
   }) async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/latest?base=$baseCurrency'),
+        Uri.parse('$_baseUrl/latest?from=$baseCurrency'),
       );
 
       if (response.statusCode == 200) {
@@ -41,9 +37,11 @@ class CurrencyApiService {
     required String targetCurrency,
   }) async {
     try {
+      // Frankfurter doesn't support same currency conversion (e.g. USD to USD)
+      if (baseCurrency == targetCurrency) return 1.0;
+
       final response = await http.get(
-        Uri.parse(
-            '$_baseUrl/latest?base=$baseCurrency&symbols=$targetCurrency'),
+        Uri.parse('$_baseUrl/latest?from=$baseCurrency&to=$targetCurrency'),
       );
 
       if (response.statusCode == 200) {
@@ -65,16 +63,11 @@ class CurrencyApiService {
     required double amount,
   }) async {
     try {
-      final response = await http.get(
-        Uri.parse('$_baseUrl/convert?from=$from&to=$to&amount=$amount'),
-      );
+      if (from == to) return amount;
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return (data['result'] as num).toDouble();
-      } else {
-        throw Exception('Failed to convert currency: ${response.statusCode}');
-      }
+      final rate =
+          await getExchangeRate(baseCurrency: from, targetCurrency: to);
+      return amount * rate;
     } catch (e) {
       throw Exception('Error converting currency: $e');
     }
@@ -88,12 +81,14 @@ class CurrencyApiService {
     required DateTime endDate,
   }) async {
     try {
+      if (baseCurrency == targetCurrency) return {};
+
       final start = _formatDate(startDate);
       final end = _formatDate(endDate);
 
       final response = await http.get(
         Uri.parse(
-          '$_baseUrl/timeseries?start_date=$start&end_date=$end&base=$baseCurrency&symbols=$targetCurrency',
+          '$_baseUrl/$start..$end?from=$baseCurrency&to=$targetCurrency',
         ),
       );
 
@@ -104,7 +99,9 @@ class CurrencyApiService {
         final Map<String, double> historicalRates = {};
         rates.forEach((date, rateData) {
           final rateMap = rateData as Map<String, dynamic>;
-          historicalRates[date] = (rateMap[targetCurrency] as num).toDouble();
+          if (rateMap.containsKey(targetCurrency)) {
+            historicalRates[date] = (rateMap[targetCurrency] as num).toDouble();
+          }
         });
 
         return historicalRates;
@@ -138,12 +135,12 @@ class CurrencyApiService {
   Future<List<String>> getAvailableCurrencies() async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/symbols'),
+        Uri.parse('$_baseUrl/currencies'),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final symbols = data['symbols'] as Map<String, dynamic>;
+        final symbols = data as Map<String, dynamic>;
         return symbols.keys.toList();
       } else {
         throw Exception('Failed to load currencies: ${response.statusCode}');
