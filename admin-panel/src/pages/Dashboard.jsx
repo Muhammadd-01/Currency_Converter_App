@@ -1,26 +1,87 @@
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Users, Activity, DollarSign, TrendingUp } from 'lucide-react';
 
-export default function Dashboard() {
+const StatCard = ({ title, value, icon: Icon, gradient }) => (
+  <div className={`p-6 rounded-2xl bg-gradient-to-br ${gradient} shadow-lg relative overflow-hidden group hover:scale-105 transition-transform duration-300`}>
+    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+    <div className="relative z-10">
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="text-white/80 font-medium mb-1">{title}</p>
+          <h3 className="text-3xl font-bold text-white">{value}</h3>
+        </div>
+        <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+          <Icon className="text-white" size={24} />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const Dashboard = () => {
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    activeUsers: 0,
+    totalConversions: 0,
+  });
+
+  useEffect(() => {
+    // Fetch stats from backend
+    const fetchStats = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/users');
+        const data = await response.json();
+        setStats({
+          totalUsers: data.length,
+          activeUsers: data.filter(u => u.lastSignInTime).length, // Simple logic for now
+          totalConversions: 1234, // Mock data
+        });
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">Admin Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Link to="/users" className="block p-6 bg-white rounded-lg shadow hover:shadow-lg transition duration-300 border border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Users</h2>
-            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Manage</span>
-          </div>
-          <p className="text-gray-600">View and manage registered users from Firebase.</p>
-        </Link>
-        
-        <div className="block p-6 bg-white rounded-lg shadow border border-gray-200 opacity-60 cursor-not-allowed">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Analytics</h2>
-            <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">Coming Soon</span>
-          </div>
-          <p className="text-gray-600">View app usage statistics and conversion metrics.</p>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold text-white mb-2">Dashboard Overview</h1>
+        <p className="text-gray-400">Welcome back, Admin</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard
+          title="Total Users"
+          value={stats.totalUsers}
+          icon={Users}
+          gradient="from-primary-start to-primary-end"
+        />
+        <StatCard
+          title="Active Users"
+          value={stats.activeUsers}
+          icon={Activity}
+          gradient="from-secondary-start to-secondary-end"
+        />
+        <StatCard
+          title="Total Conversions"
+          value={stats.totalConversions}
+          icon={TrendingUp}
+          gradient="from-accent to-blue-600"
+        />
+      </div>
+
+      {/* Recent Activity Section could go here */}
+      <div className="bg-dark-surface p-6 rounded-2xl border border-white/5">
+        <h2 className="text-xl font-bold text-white mb-4">System Status</h2>
+        <div className="flex items-center gap-2 text-success">
+          <div className="w-3 h-3 rounded-full bg-success animate-pulse"></div>
+          <span>All systems operational</span>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default Dashboard;

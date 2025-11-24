@@ -24,4 +24,15 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.delete('/:uid', async (req, res) => {
+    try {
+        const { uid } = req.params;
+        await admin.auth().deleteUser(uid);
+        res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ error: 'Failed to delete user' });
+    }
+});
+
 module.exports = router;

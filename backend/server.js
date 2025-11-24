@@ -17,6 +17,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/data', require('./routes/data'));
 
 app.get('/', (req, res) => {
     res.send('Currency Converter Admin API is running');
