@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const admin = require('../config/firebase');
 
-router.get('/', async (req, res) => {
+const { verifyAdmin } = require('../middleware/auth');
+
+router.get('/', verifyAdmin, async (req, res) => {
     try {
         if (!admin.apps.length) {
             return res.status(503).json({ error: 'Firebase Admin not initialized' });
@@ -16,6 +18,7 @@ router.get('/', async (req, res) => {
             photoURL: userRecord.photoURL,
             creationTime: userRecord.metadata.creationTime,
             lastSignInTime: userRecord.metadata.lastSignInTime,
+            customClaims: userRecord.customClaims
         }));
         res.json(users);
     } catch (error) {
@@ -24,9 +27,16 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.delete('/:uid', async (req, res) => {
+router.delete('/:uid', verifyAdmin, async (req, res) => {
     try {
         const { uid } = req.params;
+
+        // Check if target is Super Admin
+        const user = await admin.auth().getUser(uid);
+        if (user.customClaims && user.customClaims.superAdmin === true) {
+            return res.status(403).json({ error: 'Cannot delete Super Admin' });
+        }
+
         await admin.auth().deleteUser(uid);
         res.json({ message: 'User deleted successfully' });
     } catch (error) {

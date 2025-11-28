@@ -58,6 +58,7 @@ initializeSuperAdmin();
 app.use('/api/users', userRoutes);
 app.use('/api/data', require('./routes/data'));
 app.use('/api/admins', require('./routes/admins'));
+app.use('/api/history', require('./routes/history'));
 
 app.get('/', (req, res) => {
     res.send('Currency Converter Admin API is running');

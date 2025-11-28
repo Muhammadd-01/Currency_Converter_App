@@ -45,16 +45,24 @@ const AdminsPage = () => {
         }
     };
 
-    const handleDelete = async (uid) => {
+    const handleDelete = async (admin) => {
+        if (admin.isSuperAdmin) {
+            alert("You cannot delete the Super Admin!");
+            return;
+        }
+
         if (!window.confirm('Are you sure you want to delete this admin?')) return;
 
         try {
-            const response = await fetch(`http://localhost:5000/api/admins/${uid}`, {
+            const response = await fetch(`http://localhost:5000/api/admins/${admin.uid}`, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${await (await import('../firebase')).auth.currentUser.getIdToken()}`
+                }
             });
 
             if (response.ok) {
-                setAdmins(admins.filter(a => a.uid !== uid));
+                setAdmins(admins.filter(a => a.uid !== admin.uid));
                 alert('Admin deleted successfully');
             } else {
                 alert('Failed to delete admin');
@@ -107,7 +115,7 @@ const AdminsPage = () => {
 
                             {!admin.isSuperAdmin && (
                                 <button
-                                    onClick={() => handleDelete(admin.uid)}
+                                    onClick={() => handleDelete(admin)}
                                     className="p-3 text-red-400 hover:bg-red-500/10 rounded-xl transition-colors opacity-0 group-hover:opacity-100"
                                     title="Delete Admin"
                                 >

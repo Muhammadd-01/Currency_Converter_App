@@ -1,14 +1,26 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, MessageSquare, AlertCircle, Shield, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Sidebar = () => {
     const location = useLocation();
+    const { logout, isSuperAdmin } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/login');
+        } catch (error) {
+            console.error("Failed to log out", error);
+        }
+    };
 
     const menuItems = [
         { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/users', icon: Users, label: 'Users' },
-        { path: '/admins', icon: Shield, label: 'Admins' },
+        ...(isSuperAdmin ? [{ path: '/admins', icon: Shield, label: 'Admins' }] : []),
         { path: '/feedback', icon: MessageSquare, label: 'Feedback' },
         { path: '/issues', icon: AlertCircle, label: 'Issues' },
     ];
@@ -44,7 +56,10 @@ const Sidebar = () => {
             </nav>
 
             <div className="p-4 border-t border-white/10">
-                <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-red-400 hover:bg-red-500/10 transition-colors">
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
+                >
                     <LogOut size={20} />
                     <span className="font-medium">Logout</span>
                 </button>
