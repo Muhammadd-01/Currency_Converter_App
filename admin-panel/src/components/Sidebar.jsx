@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, MessageSquare, AlertCircle, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, MessageSquare, AlertCircle, Shield, LogOut } from 'lucide-react';
 
 const Sidebar = () => {
     const location = useLocation();
@@ -8,6 +8,7 @@ const Sidebar = () => {
     const menuItems = [
         { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/users', icon: Users, label: 'Users' },
+        { path: '/admins', icon: Shield, label: 'Admins' },
         { path: '/feedback', icon: MessageSquare, label: 'Feedback' },
         { path: '/issues', icon: AlertCircle, label: 'Issues' },
     ];

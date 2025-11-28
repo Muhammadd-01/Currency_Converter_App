@@ -1,1 +1,73 @@
 @import "tailwindcss";
+
+@theme {
+    /* Colors */
+    --color-primary-start: #4A00E0;
+    --color-primary-end: #8E2DE2;
+
+    --color-secondary-start: #0F2027;
+    --color-secondary-mid: #203A43;
+    --color-secondary-end: #2C5364;
+
+    --color-accent: #00D4FF;
+    --color-success: #00E676;
+    --color-warning: #FFAB00;
+    --color-error: #FF5252;
+
+    --color-dark-bg: #0A0E21;
+    --color-dark-surface: #1A1A2E;
+    --color-dark-card: #16213E;
+
+    /* Animations */
+    --animate-fade-in: fade-in 0.5s ease-out;
+    --animate-slide-up: slide-up 0.5s ease-out;
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slide-up {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+}
+
+@layer base {
+    body {
+        background-color: var(--color-dark-bg);
+        color: white;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: var(--color-dark-bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 9999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+}
