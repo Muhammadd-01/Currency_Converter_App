@@ -173,18 +173,30 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             onPressed: () async {
               final user = FirebaseAuth.instance.currentUser;
               if (user != null) {
-                await _firestoreService.submitIssue(
-                  userId: user.uid,
-                  email: user.email ?? '',
-                  subject: subjectController.text,
-                  description: descriptionController.text,
-                );
-                if (context.mounted) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Issue reported successfully')),
+                try {
+                  await _firestoreService.submitIssue(
+                    userId: user.uid,
+                    email: user.email ?? '',
+                    subject: subjectController.text,
+                    description: descriptionController.text,
                   );
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Issue reported successfully'),
+                          backgroundColor: Colors.green),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error reporting issue: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 }
               }
             },

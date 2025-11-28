@@ -19,7 +19,7 @@ const Login = () => {
             setLoading(true);
             const userCredential = await login(email, password);
             const user = userCredential.user;
-            const tokenResult = await user.getIdTokenResult();
+            const tokenResult = await user.getIdTokenResult(true);
 
             if (!tokenResult.claims.admin && !tokenResult.claims.superAdmin) {
                 await logout();

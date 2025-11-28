@@ -68,20 +68,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () async {
                 final user = FirebaseAuth.instance.currentUser;
                 if (user != null) {
-                  await _firestoreService.submitFeedback(
-                    userId: user.uid,
-                    email: user.email ?? '',
-                    message: messageController.text,
-                    rating: rating,
-                  );
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Thank you for your feedback!'),
-                        backgroundColor: Colors.green,
-                      ),
+                  try {
+                    await _firestoreService.submitFeedback(
+                      userId: user.uid,
+                      email: user.email ?? '',
+                      message: messageController.text,
+                      rating: rating,
                     );
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Thank you for your feedback!'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error sending feedback: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   }
                 }
               },
